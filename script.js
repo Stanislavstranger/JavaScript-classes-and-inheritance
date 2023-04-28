@@ -49,6 +49,15 @@ class IntBuilder extends BaseBuilder {
         return this;
     }
 
+    exp(n) {
+        this.value **= n;
+        return this;
+    }
+
+    static random(from, to) {
+        return Math.round(from + Math.random() * (to - from));
+    }
+
 }
 
 let intBuilder = new IntBuilder(10); // 10;
@@ -65,6 +74,8 @@ console.log(intBuilder.minus(1, 2));
 console.log(intBuilder.multiply(2));
 console.log(intBuilder.divide(4));
 console.log(intBuilder.mod(3));
+console.log(intBuilder.exp(3));
+console.log(IntBuilder.random(10, 100));
 
 /* create child class (inherit from base): StringBuilder in ES5 style */
 
