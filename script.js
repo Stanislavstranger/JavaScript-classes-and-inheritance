@@ -17,7 +17,7 @@ class BaseBuilder {
         return this;
     }
 
-/* if */
+    /* if */
 
     isNumber(value) {
         return typeof value === "number";
@@ -42,8 +42,12 @@ class BaseBuilder {
 
 class IntBuilder extends BaseBuilder {
 
-    constructor(int = 0) {
-        super(int);
+    constructor(number = 0) {
+        if (IntBuilder.isNumber(number)) {
+            super(number);
+        } else {
+            throw new Error('The entered value is not a number');
+        }
     }
 
     minus(...number) {
@@ -67,20 +71,20 @@ class IntBuilder extends BaseBuilder {
     }
 
     divide(number) {
-        if (this.isNumber(number)) {
+        if ((this.isNumber(number)) && (number > 0)) {
             this.value = Math.floor(this.value / number);
             return this;
         } else {
-            throw new Error('The entered value is not a number');
+            throw new Error('The entered value is not a number or a number less than or equal to zero');
         }
     }
 
     mod(number) {
-        if (this.isNumber(number)) {
+        if ((this.isNumber(number)) && (number > 0)) {
             this.value %= number;
             return this;
         } else {
-            throw new Error('The entered value is not a number');
+            throw new Error('The entered value is not a number or a number less than or equal to zero');
         }
     }
 
@@ -109,7 +113,7 @@ console.log(intBuilder.minus(1, 2));
 console.log(intBuilder.multiply(2));
 console.log(intBuilder.divide(4));
 console.log(intBuilder.mod(3));
-console.log(intBuilder.exp(3));
+/* console.log(intBuilder.exp(3)); */
 console.log(intBuilder.get());
 console.log(IntBuilder.random(10, 100));
 
