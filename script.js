@@ -17,50 +17,92 @@ class BaseBuilder {
         return this;
     }
 
+/* if */
+
+    isNumber(value) {
+        return typeof value === "number";
+    }
+
+    static isNumber(value) {
+        return typeof value === "number";
+    }
+
+    areNumbers(values) {
+        return (
+            values.length && values.every((values) => this.isNumber(values))
+        );
+    }
+
+    isString(value) {
+        return typeof value === "string";
+    }
 }
 
 /* create child class (inherit from base): IntBuilder in ES6 style */
 
 class IntBuilder extends BaseBuilder {
 
-    constructor(int) {
+    constructor(int = 0) {
         super(int);
     }
 
-    minus(...int) {
-        this.value = int.reduce((diff, int) => {
-            return diff - int;
-        }, this.value);
-        return this;
+    minus(...number) {
+        if (this.areNumbers(number)) {
+            this.value = number.reduce((diff, num) => {
+                return diff - num;
+            }, this.value);
+            return this;
+        } else {
+            throw new Error('The entered value is not a numbers');
+        }
     }
 
-    multiply(n) {
-        this.value *= n;
-        return this;
+    multiply(number) {
+        if (this.isNumber(number)) {
+            this.value *= number;
+            return this;
+        } else {
+            throw new Error('The entered value is not a number');
+        }
     }
 
-    divide(n) {
-        this.value /= n;
-        return this;
+    divide(number) {
+        if (this.isNumber(number)) {
+            this.value = Math.floor(this.value / number);
+            return this;
+        } else {
+            throw new Error('The entered value is not a number');
+        }
     }
 
-    mod(n) {
-        this.value %= n;
-        return this;
+    mod(number) {
+        if (this.isNumber(number)) {
+            this.value %= number;
+            return this;
+        } else {
+            throw new Error('The entered value is not a number');
+        }
     }
 
-    exp(n) {
-        this.value **= n;
-        return this;
+    exp(number) {
+        if (this.isNumber(number)) {
+            this.value **= number;
+            return this;
+        } else {
+            throw new Error('The entered value is not a number');
+        }
     }
 
     static random(from, to) {
-        return Math.round(from + Math.random() * (to - from));
+        if (IntBuilder.isNumber(from) && IntBuilder.isNumber(to)) {
+            return Math.round(from + Math.random() * (to - from));
+        } else {
+            throw new Error('The entered value is not a numbers');
+        }
     }
-
 }
 
-let intBuilder = new IntBuilder(10); // 10;
+let intBuilder = new IntBuilder(10);
 
 console.log(intBuilder.plus(2, 3, 2));
 console.log(intBuilder.minus(1, 2));
@@ -74,47 +116,62 @@ console.log(IntBuilder.random(10, 100));
 /* create child class (inherit from base): StringBuilder in ES5 style */
 
 function StringBuilder(str = "") {
-    this.value = str;
+    if (this.isString(str)) {
+        this.value = str;
+    } else {
+        throw new Error('The entered value is not a string');
+    }
 }
 
 StringBuilder.prototype = Object.create(BaseBuilder.prototype);
 StringBuilder.prototype.constructor = StringBuilder;
 
-StringBuilder.prototype.minus = function (...str) {
-    this.value = this.value.slice(0, -str);
-    return this;
+StringBuilder.prototype.minus = function (number) {
+    if (this.isNumber(number)) {
+        this.value = this.value.slice(0, -number);
+        return this;
+    } else {
+        throw new Error('The entered value is not a number');
+    }
 }
 
-StringBuilder.prototype.multiply = function (...str) {
-    this.value = this.value.repeat(str);
-    return this;
+StringBuilder.prototype.multiply = function (number) {
+    if (this.isNumber(number)) {
+        this.value = this.value.repeat(number);
+        return this;
+    } else {
+        throw new Error('The entered value is not a number');
+    }
 }
 
-StringBuilder.prototype.divide = function (...str) {
-    this.value = this.value.slice(0, Math.floor(this.value.length / str));
-    return this;
+StringBuilder.prototype.divide = function (number) {
+    if (this.isNumber(number)) {
+        this.value = this.value.slice(0, Math.floor(this.value.length / number));
+        return this;
+    } else {
+        throw new Error('The entered value is not a number');
+    }
 }
 
-StringBuilder.prototype.remove = function (...str) {
-    this.value = this.value.split(str).join("").trim();
-    return this;
+StringBuilder.prototype.remove = function (str) {
+    if (this.isString(str)) {
+        this.value = this.value.split(str).join("").trim();
+        return this;
+    } else {
+        throw new Error('The entered value is not a string');
+    }
 }
 
 StringBuilder.prototype.sub = function (from, length) {
-    this.value = this.value.slice(from, from + length);
-    return this;
+    if (this.isNumber(from) && this.isNumber(length)) {
+        this.value = this.value.slice(from, from + length);
+        return this;
+    } else {
+        throw new Error('The entered value is not a number');
+    }
 }
 
-let strBuilder = new StringBuilder('Hello'); // 'Hello';
-
-/* strBuilder
-  .plus(' all', '!')                         // 'Hello all!'
-  .minus(4)                                  // 'Hello '
-  .multiply(3)                               // 'Hello Hello Hello '
-  .divide(4)                                 // 'Hell';
-  .remove('l')                               // 'He';
-  .sub(1,1)                                  // 'e';
-  .get();                                    // -> 'e'; */
+let strBuilder = new StringBuilder('Hello');
 
 console.log(strBuilder.plus(' all', '!'));
 console.log(strBuilder.minus(4));
