@@ -42,9 +42,9 @@ class BaseBuilder {
 
 class IntBuilder extends BaseBuilder {
 
-    constructor(number = 0) {
-        if (IntBuilder.isNumber(number)) {
-            super(number);
+    constructor(value = 0) {
+        if (IntBuilder.isNumber(value)) {
+            super(value);
         } else {
             throw new Error('The entered value is not a number');
         }
